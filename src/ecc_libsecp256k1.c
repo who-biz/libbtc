@@ -98,7 +98,7 @@ btc_bool btc_ecc_verify_pubkey(const uint8_t* public_key, btc_bool compressed)
     return true;
 }
 
-btc_bool btc_ecc_sign(const uint8_t* private_key, const uint256 hash, unsigned char* sigder, size_t* outlen)
+btc_bool btc_ecc_sign(const uint8_t* private_key, const btc_uint256 hash, unsigned char* sigder, size_t* outlen)
 {
     assert(secp256k1_ctx);
 
@@ -112,7 +112,7 @@ btc_bool btc_ecc_sign(const uint8_t* private_key, const uint256 hash, unsigned c
     return 1;
 }
 
-btc_bool btc_ecc_sign_compact(const uint8_t* private_key, const uint256 hash, unsigned char* sigcomp, size_t* outlen)
+btc_bool btc_ecc_sign_compact(const uint8_t* private_key, const btc_uint256 hash, unsigned char* sigcomp, size_t* outlen)
 {
     assert(secp256k1_ctx);
 
@@ -127,7 +127,7 @@ btc_bool btc_ecc_sign_compact(const uint8_t* private_key, const uint256 hash, un
     return 1;
 }
 
-btc_bool btc_ecc_sign_compact_recoverable(const uint8_t* private_key, const uint256 hash, unsigned char* sigrec, size_t* outlen, int *recid)
+btc_bool btc_ecc_sign_compact_recoverable(const uint8_t* private_key, const btc_uint256 hash, unsigned char* sigrec, size_t* outlen, int *recid)
 {
     assert(secp256k1_ctx);
 
@@ -142,7 +142,7 @@ btc_bool btc_ecc_sign_compact_recoverable(const uint8_t* private_key, const uint
     return 1;
 }
 
-btc_bool btc_ecc_recover_pubkey(const unsigned char* sigrec, const uint256 hash, const int recid, uint8_t* public_key, size_t *outlen)
+btc_bool btc_ecc_recover_pubkey(const unsigned char* sigrec, const btc_uint256 hash, const int recid, uint8_t* public_key, size_t *outlen)
 {
     assert(secp256k1_ctx);
 
@@ -161,7 +161,7 @@ btc_bool btc_ecc_recover_pubkey(const unsigned char* sigrec, const uint256 hash,
     return 1;
 }
 
-btc_bool btc_ecc_verify_sig(const uint8_t* public_key, btc_bool compressed, const uint256 hash, unsigned char* sigder, size_t siglen)
+btc_bool btc_ecc_verify_sig(const uint8_t* public_key, btc_bool compressed, const btc_uint256 hash, unsigned char* sigder, size_t siglen)
 {
     assert(secp256k1_ctx);
 

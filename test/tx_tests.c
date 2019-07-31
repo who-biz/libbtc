@@ -902,7 +902,7 @@ void test_tx_sighash_ext()
         uint8_t script_data[strlen(txvalid_sighash[i].script)];
         utils_hex_to_bin(txvalid_sighash[i].script, script_data, strlen(txvalid_sighash[i].script), &outlen_sighash);
         cstring *str = cstr_new_buf(script_data, outlen_sighash);
-        uint256 hash;
+        btc_uint256 hash;
         btc_tx_sighash(tx_sighash, str, txvalid_sighash[i].i, SIGHASH_ALL, txvalid_sighash[i].amount, txvalid_sighash[i].witness ? SIGVERSION_WITNESS_V0 : SIGVERSION_BASE, hash);
 
         btc_tx_free(tx_sighash);
@@ -935,7 +935,7 @@ void test_tx_sighash()
         uint8_t script_data[strlen(test->script) / 2];
         utils_hex_to_bin(test->script, script_data, strlen(test->script), &outlen);
         cstring* script = cstr_new_buf(script_data, outlen);
-        uint256 sighash;
+        btc_uint256 sighash;
         memset(sighash, 0, sizeof(sighash));
         btc_tx_sighash(tx, script, test->inputindex, test->hashtype, 0, SIGVERSION_BASE, sighash);
 
@@ -1076,7 +1076,7 @@ void test_script_parse()
     u_assert_str_eq(hexbuf, "01000000000100ca9a3b000000001976a91457b78cc8347175aee968eaa91846e840ef36ff9288ac00000000");
     cstr_free(txser, true);
 
-    uint256 txhash;
+    btc_uint256 txhash;
     btc_tx_hash(tx, txhash);
     char txhashhex[sizeof(txhash)*2];
     utils_bin_to_hex((unsigned char*)txhash, sizeof(txhash), txhashhex);
@@ -1131,8 +1131,8 @@ void test_script_parse()
     btc_hdnode node;
     u_assert_int_eq(btc_hdnode_deserialize(masterkey, &btc_chainparams_main, &node), true);
 
-    uint256 rev_code;
-    uint256 sig_hash;
+    btc_uint256 rev_code;
+    btc_uint256 sig_hash;
     btc_hash(node.private_key, BTC_ECKEY_PKEY_LENGTH, rev_code);
 
     uint8_t sigdata[38] = {0x42, 0x49, 0x50, 0x00, 0x00, 0x00, 0x00 };

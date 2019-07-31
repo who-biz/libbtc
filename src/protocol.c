@@ -70,7 +70,7 @@ cstring* btc_p2p_message_new(const unsigned char netmagic[4], const char* comman
     cstr_append_buf(s, &data_len_le, 4);
 
     /* data checksum (first 4 bytes of the double sha256 hash of the pl) */
-    uint256 msghash;
+    btc_uint256 msghash;
     btc_hash(data, data_len, msghash);
     cstr_append_buf(s, &msghash[0], 4);
 
@@ -219,7 +219,7 @@ btc_bool btc_p2p_msg_version_deser(btc_p2p_version_msg* msg, struct const_buffer
     return true;
 }
 
-void btc_p2p_msg_inv_init(btc_p2p_inv_msg* msg, uint32_t type, uint256 hash)
+void btc_p2p_msg_inv_init(btc_p2p_inv_msg* msg, uint32_t type, btc_uint256 hash)
 {
     msg->type = type;
     memcpy(&msg->hash, hash, BTC_HASH_LENGTH);
@@ -241,14 +241,14 @@ btc_bool btc_p2p_msg_inv_deser(btc_p2p_inv_msg* msg, struct const_buffer* buf)
     return true;
 }
 
-void btc_p2p_msg_getheaders(vector* blocklocators, uint256 hashstop, cstring* s)
+void btc_p2p_msg_getheaders(vector* blocklocators, btc_uint256 hashstop, cstring* s)
 {
     unsigned int i;
 
     ser_u32(s, BTC_PROTOCOL_VERSION);
     ser_varlen(s, blocklocators->len);
     for (i = 0; i < blocklocators->len; i++) {
-        uint256 *hash = vector_idx(blocklocators, i);
+        btc_uint256 *hash = vector_idx(blocklocators, i);
         ser_bytes(s, hash, BTC_HASH_LENGTH);
     }
     if (hashstop)
@@ -257,7 +257,7 @@ void btc_p2p_msg_getheaders(vector* blocklocators, uint256 hashstop, cstring* s)
         ser_bytes(s, NULLHASH, BTC_HASH_LENGTH);
 }
 
-btc_bool btc_p2p_deser_msg_getheaders(vector* blocklocators, uint256 hashstop, struct const_buffer* buf)
+btc_bool btc_p2p_deser_msg_getheaders(vector* blocklocators, btc_uint256 hashstop, struct const_buffer* buf)
 {
     int32_t version;
     uint32_t vsize;
@@ -267,7 +267,7 @@ btc_bool btc_p2p_deser_msg_getheaders(vector* blocklocators, uint256 hashstop, s
         return false;
     vector_resize(blocklocators, vsize);
     for (unsigned int i = 0; i < vsize; i++) {
-        uint256 *hash = btc_malloc(BTC_HASH_LENGTH);
+        btc_uint256 *hash = btc_malloc(BTC_HASH_LENGTH);
         if (!deser_u256(*hash, buf)) {
             btc_free(hash);
             return false;

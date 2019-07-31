@@ -230,7 +230,7 @@ void btc_net_spv_fill_block_locator(btc_spv_client *client, vector *blocklocator
                 const btc_checkpoint *cp = &btc_mainnet_checkpoint_array[i];
                 if ( btc_mainnet_checkpoint_array[i].timestamp < min_timestamp)
                 {
-                    uint256 *hash = btc_calloc(1, sizeof(uint256));
+                    btc_uint256 *hash = btc_calloc(1, sizeof(btc_uint256));
                     utils_uint256_sethex((char *)btc_mainnet_checkpoint_array[i].hash, (uint8_t *)hash);
                     vector_add(blocklocators, (void *)hash);
 
@@ -244,8 +244,8 @@ void btc_net_spv_fill_block_locator(btc_spv_client *client, vector *blocklocator
                 return;
             }
         }
-        uint256 *hash = btc_calloc(1, sizeof(uint256));
-        memcpy(hash, &client->chainparams->genesisblockhash, sizeof(uint256));
+        btc_uint256 *hash = btc_calloc(1, sizeof(btc_uint256));
+        memcpy(hash, &client->chainparams->genesisblockhash, sizeof(btc_uint256));
         vector_add(blocklocators, (void *)hash);
         client->nodegroup->log_write_cb("Setting blocklocator with genesis block\n");
     }

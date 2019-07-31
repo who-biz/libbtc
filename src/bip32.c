@@ -243,16 +243,16 @@ void btc_hdnode_serialize_private(const btc_hdnode* node, const btc_chainparams*
 }
 
 
-void btc_hdnode_get_hash160(const btc_hdnode* node, uint160 hash160_out)
+void btc_hdnode_get_hash160(const btc_hdnode* node, btc_uint160 hash160_out)
 {
-    uint256 hashout;
+    btc_uint256 hashout;
     btc_hash_sngl_sha256(node->public_key, BTC_ECKEY_COMPRESSED_LENGTH, hashout);
     btc_ripemd160(hashout, sizeof(hashout), hash160_out);
 }
 
 void btc_hdnode_get_p2pkh_address(const btc_hdnode* node, const btc_chainparams* chain, char* str, int strsize)
 {
-    uint8_t hash160[sizeof(uint160)+1];
+    uint8_t hash160[sizeof(btc_uint160)+1];
     hash160[0] = chain->b58prefix_pubkey_address;
     btc_hdnode_get_hash160(node, hash160 + 1);
     btc_base58_encode_check(hash160, sizeof(hash160), str, strsize);

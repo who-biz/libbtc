@@ -61,24 +61,24 @@ LIBBTC_API void btc_pubkey_cleanse(btc_pubkey* pubkey);
 LIBBTC_API void btc_pubkey_from_key(const btc_key* privkey, btc_pubkey* pubkey_inout);
 
 //get the hash160 (single SHA256 + RIPEMD160)
-LIBBTC_API void btc_pubkey_get_hash160(const btc_pubkey* pubkey, uint160 hash160);
+LIBBTC_API void btc_pubkey_get_hash160(const btc_pubkey* pubkey, btc_uint160 hash160);
 
 //get the hex representation of a pubkey, strsize must be at leat 66 bytes
 LIBBTC_API btc_bool btc_pubkey_get_hex(const btc_pubkey* pubkey, char* str, size_t* strsize);
 
 //sign a 32byte message/hash and returns a DER encoded signature (through *sigout)
-LIBBTC_API btc_bool btc_key_sign_hash(const btc_key* privkey, const uint256 hash, unsigned char* sigout, size_t* outlen);
+LIBBTC_API btc_bool btc_key_sign_hash(const btc_key* privkey, const btc_uint256 hash, unsigned char* sigout, size_t* outlen);
 
 //sign a 32byte message/hash and returns a 64 byte compact signature (through *sigout)
-LIBBTC_API btc_bool btc_key_sign_hash_compact(const btc_key* privkey, const uint256 hash, unsigned char* sigout, size_t* outlen);
+LIBBTC_API btc_bool btc_key_sign_hash_compact(const btc_key* privkey, const btc_uint256 hash, unsigned char* sigout, size_t* outlen);
 
 //sign a 32byte message/hash and returns a 64 byte compact signature (through *sigout) plus a 1byte recovery id
-LIBBTC_API btc_bool btc_key_sign_hash_compact_recoverable(const btc_key* privkey, const uint256 hash, unsigned char* sigout, size_t* outlen, int *recid);
+LIBBTC_API btc_bool btc_key_sign_hash_compact_recoverable(const btc_key* privkey, const btc_uint256 hash, unsigned char* sigout, size_t* outlen, int *recid);
 
-LIBBTC_API btc_bool btc_key_sign_recover_pubkey(const unsigned char* sig, const uint256 hash, int recid, btc_pubkey* pubkey);
+LIBBTC_API btc_bool btc_key_sign_recover_pubkey(const unsigned char* sig, const btc_uint256 hash, int recid, btc_pubkey* pubkey);
 
 //verifies a DER encoded signature with given pubkey and return true if valid
-LIBBTC_API btc_bool btc_pubkey_verify_sig(const btc_pubkey* pubkey, const uint256 hash, unsigned char* sigder, int len);
+LIBBTC_API btc_bool btc_pubkey_verify_sig(const btc_pubkey* pubkey, const btc_uint256 hash, unsigned char* sigder, int len);
 
 LIBBTC_API btc_bool btc_pubkey_getaddr_p2sh_p2wpkh(const btc_pubkey* pubkey, const btc_chainparams* chain, char *addrout);
 LIBBTC_API btc_bool btc_pubkey_getaddr_p2pkh(const btc_pubkey* pubkey, const btc_chainparams* chain, char *addrout);

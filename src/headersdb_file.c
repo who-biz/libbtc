@@ -45,7 +45,7 @@ int btc_header_compare(const void *l, const void *r)
     uint8_t *hashB = (uint8_t *)lr->hash;
 
     /* byte per byte compare */
-    for (unsigned int i = 0; i < sizeof(uint256); i++) {
+    for (unsigned int i = 0; i < sizeof(btc_uint256); i++) {
         uint8_t iA = hashA[i];
         uint8_t iB = hashB[i];
         if (iA > iB)
@@ -156,7 +156,7 @@ btc_bool btc_headers_db_load(btc_headers_db* db, const char *file_path) {
                 //load all
 
                 /* deserialize the p2p header */
-                uint256 hash;
+                btc_uint256 hash;
                 uint32_t height;
                 deser_u256(hash, &cbuf_all);
                 deser_u32(&height, &cbuf_all);
@@ -300,8 +300,8 @@ void btc_headers_db_fill_block_locator(btc_headers_db* db, vector *blocklocators
         for(int i = 0; i<10;i++)
         {
             //TODO: try to share memory and avoid heap allocation
-            uint256 *hash = btc_calloc(1, sizeof(uint256));
-            memcpy(hash, scan_tip->hash, sizeof(uint256));
+            btc_uint256 *hash = btc_calloc(1, sizeof(btc_uint256));
+            memcpy(hash, scan_tip->hash, sizeof(btc_uint256));
 
             vector_add(blocklocators, (void *)hash);
             if (scan_tip->prev)
@@ -312,11 +312,11 @@ void btc_headers_db_fill_block_locator(btc_headers_db* db, vector *blocklocators
     }
 }
 
-btc_blockindex * btc_headersdb_find(btc_headers_db* db, uint256 hash) {
+btc_blockindex * btc_headersdb_find(btc_headers_db* db, btc_uint256 hash) {
     if (db->use_binary_tree)
     {
         btc_blockindex *blockindex = btc_calloc(1, sizeof(btc_blockindex));
-        memcpy(blockindex->hash, hash, sizeof(uint256));
+        memcpy(blockindex->hash, hash, sizeof(btc_uint256));
         btc_blockindex *blockindex_f = tfind(blockindex, &db->tree_root, btc_header_compare); /* read */
         if (blockindex_f) {
             blockindex_f = *(btc_blockindex **)blockindex_f;
@@ -348,9 +348,9 @@ btc_bool btc_headersdb_has_checkpoint_start(btc_headers_db* db) {
     return (db->chainbottom->height != 0);
 }
 
-void btc_headersdb_set_checkpoint_start(btc_headers_db* db, uint256 hash, uint32_t height) {
+void btc_headersdb_set_checkpoint_start(btc_headers_db* db, btc_uint256 hash, uint32_t height) {
     db->chainbottom = btc_calloc(1, sizeof(btc_blockindex));
     db->chainbottom->height = height;
-    memcpy(db->chainbottom->hash, hash, sizeof(uint256));
+    memcpy(db->chainbottom->hash, hash, sizeof(btc_uint256));
     db->chaintip = db->chainbottom;
 }

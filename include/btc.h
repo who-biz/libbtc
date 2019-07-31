@@ -76,8 +76,8 @@ typedef uint8_t btc_bool; //!serialize, c/c++ save bool
 
 LIBBTC_BEGIN_DECL
 
-typedef uint8_t uint256[32];
-typedef uint8_t uint160[20];
+typedef uint8_t btc_uint256[32];
+typedef uint8_t btc_uint160[20];
 
 LIBBTC_END_DECL
 

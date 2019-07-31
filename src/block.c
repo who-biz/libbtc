@@ -96,7 +96,7 @@ void btc_block_header_copy(btc_block_header* dest, const btc_block_header* src)
     dest->nonce = src->nonce;
 }
 
-btc_bool btc_block_header_hash(btc_block_header* header, uint256 hash)
+btc_bool btc_block_header_hash(btc_block_header* header, btc_uint256 hash)
 {
     cstring* s = cstr_new_sz(80);
     btc_block_header_serialize(s, header);

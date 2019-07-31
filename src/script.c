@@ -241,8 +241,8 @@ btc_bool btc_script_is_pubkeyhash(const vector* ops, vector* data_out)
         if (data_out) {
             //copy the data (hash160) in case of a non empty vector
             const btc_script_op* op = vector_idx(ops, 2);
-            uint8_t* buffer = btc_calloc(1, sizeof(uint160));
-            memcpy(buffer, op->data, sizeof(uint160));
+            uint8_t* buffer = btc_calloc(1, sizeof(btc_uint160));
+            memcpy(buffer, op->data, sizeof(btc_uint160));
             vector_add(data_out, buffer);
         }
         return true;
@@ -261,8 +261,8 @@ btc_bool btc_script_is_scripthash(const vector* ops, vector* data_out)
         if (data_out) {
             //copy the data (hash160) in case of a non empty vector
             const btc_script_op* op = vector_idx(ops, 1);
-            uint8_t* buffer = btc_calloc(1, sizeof(uint160));
-            memcpy(buffer, op->data, sizeof(uint160));
+            uint8_t* buffer = btc_calloc(1, sizeof(btc_uint160));
+            memcpy(buffer, op->data, sizeof(btc_uint160));
             vector_add(data_out, buffer);
         }
 
@@ -416,7 +416,7 @@ btc_bool btc_script_build_p2pkh(cstring* script_in, const btc_uint160 hash160)
     btc_script_append_op(script_in, OP_HASH160);
 
 
-    btc_script_append_pushdata(script_in, (unsigned char*)hash160, sizeof(uint160));
+    btc_script_append_pushdata(script_in, (unsigned char*)hash160, sizeof(btc_uint160));
     btc_script_append_op(script_in, OP_EQUALVERIFY);
     btc_script_append_op(script_in, OP_CHECKSIG);
 
@@ -428,7 +428,7 @@ btc_bool btc_script_build_p2wpkh(cstring* script_in, const btc_uint160 hash160)
     cstr_resize(script_in, 0); //clear script
 
     btc_script_append_op(script_in, OP_0);
-    btc_script_append_pushdata(script_in, (unsigned char*)hash160, sizeof(uint160));
+    btc_script_append_pushdata(script_in, (unsigned char*)hash160, sizeof(btc_uint160));
 
     return true;
 }
@@ -437,7 +437,7 @@ btc_bool btc_script_build_p2sh(cstring* script_in, const btc_uint160 hash160)
 {
     cstr_resize(script_in, 0); //clear script
     btc_script_append_op(script_in, OP_HASH160);
-    btc_script_append_pushdata(script_in, (unsigned char*)hash160, sizeof(uint160));
+    btc_script_append_pushdata(script_in, (unsigned char*)hash160, sizeof(btc_uint160));
     btc_script_append_op(script_in, OP_EQUAL);
 
     return true;

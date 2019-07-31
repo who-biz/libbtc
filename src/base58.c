@@ -128,7 +128,7 @@ int btc_base58_decode(void* bin, size_t* binszp, const char* b58)
 
 int btc_b58check(const void* bin, size_t binsz, const char* base58str)
 {
-    uint256 buf;
+    btc_uint256 buf;
     const uint8_t* binc = bin;
     unsigned i;
     if (binsz < 4) {
@@ -246,14 +246,14 @@ int btc_base58_decode_check(const char* str, uint8_t* data, size_t datalen)
     return ret;
 }
 
-btc_bool btc_p2pkh_addr_from_hash160(const uint160 hashin, const btc_chainparams* chain, char *addrout, int len) {
-    uint8_t hash160[sizeof(uint160)+1];
+btc_bool btc_p2pkh_addr_from_hash160(const btc_uint160 hashin, const btc_chainparams* chain, char *addrout, int len) {
+    uint8_t hash160[sizeof(btc_uint160)+1];
     hash160[0] = chain->b58prefix_pubkey_address;
-    memcpy(hash160 + 1, hashin, sizeof(uint160));
+    memcpy(hash160 + 1, hashin, sizeof(btc_uint160));
 
-    return (btc_base58_encode_check(hash160, sizeof(uint160)+1, addrout, len) > 0);
+    return (btc_base58_encode_check(hash160, sizeof(btc_uint160)+1, addrout, len) > 0);
 }
 
-btc_bool btc_p2wpkh_addr_from_hash160(const uint160 hashin, const btc_chainparams* chain, char *addrout) {
-    return segwit_addr_encode(addrout, chain->bech32_hrp, 0, hashin, sizeof(uint160));
+btc_bool btc_p2wpkh_addr_from_hash160(const btc_uint160 hashin, const btc_chainparams* chain, char *addrout) {
+    return segwit_addr_encode(addrout, chain->bech32_hrp, 0, hashin, sizeof(btc_uint160));
 }

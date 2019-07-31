@@ -53,16 +53,16 @@ LIBBTC_API btc_bool btc_ecc_verify_privatekey(const uint8_t* private_key);
 LIBBTC_API btc_bool btc_ecc_verify_pubkey(const uint8_t* public_key, btc_bool compressed);
 
 //!create a DER signature (72-74 bytes) with private key
-LIBBTC_API btc_bool btc_ecc_sign(const uint8_t* private_key, const uint256 hash, unsigned char* sigder, size_t* outlen);
+LIBBTC_API btc_bool btc_ecc_sign(const uint8_t* private_key, const btc_uint256 hash, unsigned char* sigder, size_t* outlen);
 
 //!create a compact (64bytes) signature with private key
-LIBBTC_API btc_bool btc_ecc_sign_compact(const uint8_t* private_key, const uint256 hash, unsigned char* sigcomp, size_t* outlen);
+LIBBTC_API btc_bool btc_ecc_sign_compact(const uint8_t* private_key, const btc_uint256 hash, unsigned char* sigcomp, size_t* outlen);
 
 //!create a compact recoverable (65bytes) signature with private key
-LIBBTC_API btc_bool btc_ecc_sign_compact_recoverable(const uint8_t* private_key, const uint256 hash, unsigned char* sigcomprec, size_t* outlen, int* recid);
+LIBBTC_API btc_bool btc_ecc_sign_compact_recoverable(const uint8_t* private_key, const btc_uint256 hash, unsigned char* sigcomprec, size_t* outlen, int* recid);
 
 //!recover a pubkey from a signature and recid
-LIBBTC_API btc_bool btc_ecc_recover_pubkey(const unsigned char* sigrec, const uint256 hash, const int recid, uint8_t* public_key, size_t *outlen);
+LIBBTC_API btc_bool btc_ecc_recover_pubkey(const unsigned char* sigrec, const btc_uint256 hash, const int recid, uint8_t* public_key, size_t *outlen);
 
 //!converts (and normalized) a compact signature to DER
 LIBBTC_API btc_bool btc_ecc_compact_to_der_normalized(unsigned char* sigcomp_in, unsigned char* sigder_out, size_t* sigder_len_out);
@@ -71,7 +71,7 @@ LIBBTC_API btc_bool btc_ecc_compact_to_der_normalized(unsigned char* sigcomp_in,
 LIBBTC_API btc_bool btc_ecc_der_to_compact(unsigned char* sigder_in, size_t sigder_len, unsigned char* sigcomp_out);
 
 //!verify DER signature with public key
-LIBBTC_API btc_bool btc_ecc_verify_sig(const uint8_t* public_key, btc_bool compressed, const uint256 hash, unsigned char* sigder, size_t siglen);
+LIBBTC_API btc_bool btc_ecc_verify_sig(const uint8_t* public_key, btc_bool compressed, const btc_uint256 hash, unsigned char* sigder, size_t siglen);
 
 LIBBTC_END_DECL
 

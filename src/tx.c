@@ -336,7 +336,7 @@ void btc_tx_serialize(cstring* s, const btc_tx* tx, btc_bool allow_witness)
     ser_u32(s, tx->locktime);
 }
 
-void btc_tx_hash(const btc_tx* tx, uint256 hashout)
+void btc_tx_hash(const btc_tx* tx, btc_uint256 hashout)
 {
     cstring* txser = cstr_new_sz(1024);
     btc_tx_serialize(txser, tx, false);
@@ -437,7 +437,7 @@ void btc_tx_copy(btc_tx* dest, const btc_tx* src)
     }
 }
 
-void btc_tx_prevout_hash(const btc_tx* tx, uint256 hash) {
+void btc_tx_prevout_hash(const btc_tx* tx, btc_uint256 hash) {
     cstring* s = cstr_new_sz(512);
     unsigned int i;
     btc_tx_in* tx_in;
@@ -452,7 +452,7 @@ void btc_tx_prevout_hash(const btc_tx* tx, uint256 hash) {
 }
 
 
-void btc_tx_sequence_hash(const btc_tx* tx, uint256 hash) {
+void btc_tx_sequence_hash(const btc_tx* tx, btc_uint256 hash) {
     cstring* s = cstr_new_sz(512);
     unsigned int i;
     btc_tx_in* tx_in;
@@ -465,7 +465,7 @@ void btc_tx_sequence_hash(const btc_tx* tx, uint256 hash) {
     cstr_free(s, true);
 }
 
-void btc_tx_outputs_hash(const btc_tx* tx, uint256 hash) {
+void btc_tx_outputs_hash(const btc_tx* tx, btc_uint256 hash) {
     cstring* s = cstr_new_sz(512);
     unsigned int i;
     btc_tx_out* tx_out;
@@ -478,7 +478,7 @@ void btc_tx_outputs_hash(const btc_tx* tx, uint256 hash) {
     cstr_free(s, true);
 }
 
-btc_bool btc_tx_sighash(const btc_tx* tx_to, const cstring* fromPubKey, unsigned int in_num, int hashtype, const uint64_t amount, const enum btc_sig_version sigversion, uint256 hash)
+btc_bool btc_tx_sighash(const btc_tx* tx_to, const cstring* fromPubKey, unsigned int in_num, int hashtype, const uint64_t amount, const enum btc_sig_version sigversion, btc_uint256 hash)
 {
     if (in_num >= tx_to->vin->len)
         return false;
@@ -492,11 +492,11 @@ btc_bool btc_tx_sighash(const btc_tx* tx_to, const cstring* fromPubKey, unsigned
 
     // segwit
     if (sigversion == SIGVERSION_WITNESS_V0) {
-        uint256 hash_prevouts;
+        btc_uint256 hash_prevouts;
         btc_hash_clear(hash_prevouts);
-        uint256 hash_sequence;
+        btc_uint256 hash_sequence;
         btc_hash_clear(hash_sequence);
-        uint256 hash_outputs;
+        btc_uint256 hash_outputs;
         btc_hash_clear(hash_outputs);
 
         if (!(hashtype & SIGHASH_ANYONECANPAY)) {
@@ -702,7 +702,7 @@ btc_bool btc_tx_add_address_out(btc_tx* tx, const btc_chainparams* chain, int64_
 }
 
 
-btc_bool btc_tx_add_p2pkh_hash160_out(btc_tx* tx, int64_t amount, uint160 hash160)
+btc_bool btc_tx_add_p2pkh_hash160_out(btc_tx* tx, int64_t amount, btc_uint160 hash160)
 {
     btc_tx_out* tx_out = btc_tx_out_new();
 
@@ -716,7 +716,7 @@ btc_bool btc_tx_add_p2pkh_hash160_out(btc_tx* tx, int64_t amount, uint160 hash16
     return true;
 }
 
-btc_bool btc_tx_add_p2sh_hash160_out(btc_tx* tx, int64_t amount, uint160 hash160)
+btc_bool btc_tx_add_p2sh_hash160_out(btc_tx* tx, int64_t amount, btc_uint160 hash160)
 {
     btc_tx_out* tx_out = btc_tx_out_new();
 
@@ -732,7 +732,7 @@ btc_bool btc_tx_add_p2sh_hash160_out(btc_tx* tx, int64_t amount, uint160 hash160
 
 btc_bool btc_tx_add_p2pkh_out(btc_tx* tx, int64_t amount, const btc_pubkey* pubkey)
 {
-    uint160 hash160;
+    btc_uint160 hash160;
     btc_pubkey_get_hash160(pubkey, hash160);
     return btc_tx_add_p2pkh_hash160_out(tx, amount, hash160);
 }
@@ -825,19 +825,19 @@ enum btc_tx_sign_result btc_tx_sign_input(btc_tx *tx_in_out, const cstring *scri
     }
     if (type == BTC_TX_PUBKEYHASH && script_pushes->len == 1) {
         // check if given private key matches the script
-        uint160 hash160;
+        btc_uint160 hash160;
         btc_pubkey_get_hash160(&pubkey, hash160);
-        uint160 *hash160_in_script = vector_idx(script_pushes, 0);
+        btc_uint160 *hash160_in_script = vector_idx(script_pushes, 0);
         if (memcmp(hash160_in_script, hash160, sizeof(hash160)) != 0) {
             res = BTC_SIGN_NO_KEY_MATCH; //sign anyways
         }
     }
     else if (type == BTC_TX_WITNESS_V0_PUBKEYHASH && script_pushes->len == 1) {
-        uint160 *hash160_in_script = vector_idx(script_pushes, 0);
+        btc_uint160 *hash160_in_script = vector_idx(script_pushes, 0);
         sig_version = SIGVERSION_WITNESS_V0;
 
         // check if given private key matches the script
-        uint160 hash160;
+        btc_uint160 hash160;
         btc_pubkey_get_hash160(&pubkey, hash160);
         if (memcmp(hash160_in_script, hash160, sizeof(hash160)) != 0) {
             res = BTC_SIGN_NO_KEY_MATCH; //sign anyways
@@ -852,7 +852,7 @@ enum btc_tx_sign_result btc_tx_sign_input(btc_tx *tx_in_out, const cstring *scri
     }
     vector_free(script_pushes, true);
 
-    uint256 sighash;
+    btc_uint256 sighash;
     memset(sighash, 0, sizeof(sighash));
     if(!btc_tx_sighash(tx_in_out, script_sign, inputindex, sighashtype, amount, sig_version, sighash)) {
         cstr_free(witness_set_scriptsig, true);

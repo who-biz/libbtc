@@ -76,7 +76,7 @@ void btc_privkey_gen(btc_key* privkey)
 
 btc_bool btc_privkey_verify_pubkey(btc_key* privkey, btc_pubkey* pubkey)
 {
-    uint256 rnddata, hash;
+    btc_uint256 rnddata, hash;
     assert(btc_random_bytes(rnddata, BTC_HASH_LENGTH, 0));
     btc_hash(rnddata, BTC_HASH_LENGTH, hash);
 
@@ -155,9 +155,9 @@ void btc_pubkey_cleanse(btc_pubkey* pubkey)
 }
 
 
-void btc_pubkey_get_hash160(const btc_pubkey* pubkey, uint160 hash160)
+void btc_pubkey_get_hash160(const btc_pubkey* pubkey, btc_uint160 hash160)
 {
-    uint256 hashout;
+    btc_uint256 hashout;
     btc_hash_sngl_sha256(pubkey->pubkey, pubkey->compressed ? BTC_ECKEY_COMPRESSED_LENGTH : BTC_ECKEY_UNCOMPRESSED_LENGTH, hashout);
 
     btc_ripemd160(hashout, sizeof(hashout), hash160);
@@ -186,23 +186,23 @@ void btc_pubkey_from_key(const btc_key* privkey, btc_pubkey* pubkey_inout)
 }
 
 
-btc_bool btc_key_sign_hash(const btc_key* privkey, const uint256 hash, unsigned char* sigout, size_t* outlen)
+btc_bool btc_key_sign_hash(const btc_key* privkey, const btc_uint256 hash, unsigned char* sigout, size_t* outlen)
 {
     return btc_ecc_sign(privkey->privkey, hash, sigout, outlen);
 }
 
 
-btc_bool btc_key_sign_hash_compact(const btc_key* privkey, const uint256 hash, unsigned char* sigout, size_t* outlen)
+btc_bool btc_key_sign_hash_compact(const btc_key* privkey, const btc_uint256 hash, unsigned char* sigout, size_t* outlen)
 {
     return btc_ecc_sign_compact(privkey->privkey, hash, sigout, outlen);
 }
 
-btc_bool btc_key_sign_hash_compact_recoverable(const btc_key* privkey, const uint256 hash, unsigned char* sigout, size_t* outlen, int* recid)
+btc_bool btc_key_sign_hash_compact_recoverable(const btc_key* privkey, const btc_uint256 hash, unsigned char* sigout, size_t* outlen, int* recid)
 {
     return btc_ecc_sign_compact_recoverable(privkey->privkey, hash, sigout, outlen, recid);
 }
 
-btc_bool btc_key_sign_recover_pubkey(const unsigned char* sig, const uint256 hash, int recid, btc_pubkey* pubkey)
+btc_bool btc_key_sign_recover_pubkey(const unsigned char* sig, const btc_uint256 hash, int recid, btc_pubkey* pubkey)
 {
     uint8_t pubkeybuf[128];
     size_t outlen = 128;
@@ -217,18 +217,18 @@ btc_bool btc_key_sign_recover_pubkey(const unsigned char* sig, const uint256 has
     return 1;
 }
 
-btc_bool btc_pubkey_verify_sig(const btc_pubkey* pubkey, const uint256 hash, unsigned char* sigder, int len)
+btc_bool btc_pubkey_verify_sig(const btc_pubkey* pubkey, const btc_uint256 hash, unsigned char* sigder, int len)
 {
     return btc_ecc_verify_sig(pubkey->pubkey, pubkey->compressed, hash, sigder, len);
 }
 
 btc_bool btc_pubkey_getaddr_p2sh_p2wpkh(const btc_pubkey* pubkey, const btc_chainparams* chain, char *addrout) {
     cstring *p2wphk_script = cstr_new_sz(22);
-    uint160 keyhash;
+    btc_uint160 keyhash;
     btc_pubkey_get_hash160(pubkey, keyhash);
     btc_script_build_p2wpkh(p2wphk_script, keyhash);
 
-    uint8_t hash160[sizeof(uint160)+1];
+    uint8_t hash160[sizeof(btc_uint160)+1];
     hash160[0] = chain->b58prefix_script_address;
     btc_script_get_scripthash(p2wphk_script, hash160+1);
     cstr_free(p2wphk_script, true);
@@ -238,7 +238,7 @@ btc_bool btc_pubkey_getaddr_p2sh_p2wpkh(const btc_pubkey* pubkey, const btc_chai
 }
 
 btc_bool btc_pubkey_getaddr_p2pkh(const btc_pubkey* pubkey, const btc_chainparams* chain, char *addrout) {
-    uint8_t hash160[sizeof(uint160)+1];
+    uint8_t hash160[sizeof(btc_uint160)+1];
     hash160[0] = chain->b58prefix_pubkey_address;
     btc_pubkey_get_hash160(pubkey, hash160 + 1);
     btc_base58_encode_check(hash160, sizeof(hash160), addrout, 100);
@@ -246,7 +246,7 @@ btc_bool btc_pubkey_getaddr_p2pkh(const btc_pubkey* pubkey, const btc_chainparam
 }
 
 btc_bool btc_pubkey_getaddr_p2wpkh(const btc_pubkey* pubkey, const btc_chainparams* chain, char *addrout) {
-    uint160 hash160;
+    btc_uint160 hash160;
     btc_pubkey_get_hash160(pubkey, hash160);
     segwit_addr_encode(addrout, chain->bech32_hrp, 0, hash160, sizeof(hash160));
     return true;
