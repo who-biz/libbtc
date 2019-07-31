@@ -408,7 +408,7 @@ btc_bool btc_script_build_multisig(cstring* script_in, const unsigned int requir
     return true;
 }
 
-btc_bool btc_script_build_p2pkh(cstring* script_in, const uint160 hash160)
+btc_bool btc_script_build_p2pkh(cstring* script_in, const btc_uint160 hash160)
 {
     cstr_resize(script_in, 0); //clear script
 
@@ -423,7 +423,7 @@ btc_bool btc_script_build_p2pkh(cstring* script_in, const uint160 hash160)
     return true;
 }
 
-btc_bool btc_script_build_p2wpkh(cstring* script_in, const uint160 hash160)
+btc_bool btc_script_build_p2wpkh(cstring* script_in, const btc_uint160 hash160)
 {
     cstr_resize(script_in, 0); //clear script
 
@@ -433,7 +433,7 @@ btc_bool btc_script_build_p2wpkh(cstring* script_in, const uint160 hash160)
     return true;
 }
 
-btc_bool btc_script_build_p2sh(cstring* script_in, const uint160 hash160)
+btc_bool btc_script_build_p2sh(cstring* script_in, const btc_uint160 hash160)
 {
     cstr_resize(script_in, 0); //clear script
     btc_script_append_op(script_in, OP_HASH160);
@@ -443,12 +443,12 @@ btc_bool btc_script_build_p2sh(cstring* script_in, const uint160 hash160)
     return true;
 }
 
-btc_bool btc_script_get_scripthash(const cstring* script_in, uint160 scripthash)
+btc_bool btc_script_get_scripthash(const cstring* script_in, btc_uint160 scripthash)
 {
     if (!script_in) {
         return false;
     }
-    uint256 hash;
+    btc_uint256 hash;
     btc_hash_sngl_sha256((const unsigned char *)script_in->str, script_in->len, hash);
     btc_ripemd160(hash, sizeof(hash), scripthash);
 

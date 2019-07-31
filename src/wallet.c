@@ -68,7 +68,7 @@ int btc_wallet_hdnode_compare(const void *l, const void *r)
 
     /* byte per byte compare */
     /* TODO: switch to memcmp */
-    for (unsigned int i = 0; i < sizeof(uint160); i++) {
+    for (unsigned int i = 0; i < sizeof(btc_uint160); i++) {
         uint8_t iA = pubkeyA[i];
         uint8_t iB = pubkeyB[i];
         if (iA > iB)
@@ -89,7 +89,7 @@ int btc_wtx_compare(const void *l, const void *r)
     uint8_t *hashB = (uint8_t *)lr->tx_hash_cache;
 
     /* byte per byte compare */
-    for (unsigned int i = 0; i < sizeof(uint256); i++) {
+    for (unsigned int i = 0; i < sizeof(btc_uint256); i++) {
         uint8_t iA = hashA[i];
         uint8_t iB = hashB[i];
         if (iA > iB)
@@ -169,14 +169,14 @@ void btc_wallet_hdnode_free(btc_wallet_hdnode* whdnode)
 
 void btc_wallet_hdnode_serialize(cstring* s, const btc_chainparams *params, const btc_wallet_hdnode* whdnode)
 {
-    ser_bytes(s, whdnode->pubkeyhash, sizeof(uint160));
+    ser_bytes(s, whdnode->pubkeyhash, sizeof(btc_uint160));
     char strbuf[196];
     btc_hdnode_serialize_private(whdnode->hdnode, params, strbuf, sizeof(strbuf));
     ser_str(s, strbuf, sizeof(strbuf));
 }
 
 btc_bool btc_wallet_hdnode_deserialize(btc_wallet_hdnode* whdnode, const btc_chainparams *params, struct const_buffer* buf) {
-    deser_bytes(&whdnode->pubkeyhash, buf, sizeof(uint160));
+    deser_bytes(&whdnode->pubkeyhash, buf, sizeof(btc_uint160));
     char strbuf[196];
     if (!deser_str(strbuf, buf, sizeof(strbuf))) return false;
     if (!btc_hdnode_deserialize(strbuf, params, whdnode->hdnode)) return false;
@@ -255,12 +255,12 @@ void btc_wallet_free(btc_wallet* wallet)
 //            wallet->masterkey = btc_hdnode_new();
 //            btc_hdnode_deserialize(rec->value->str, wallet->chain, wallet->masterkey);
 //        }
-//        if (rec->key->len == strlen(hdkey_key) + sizeof(uint160) && memcmp(rec->key->str, hdkey_key, strlen(hdkey_key)) == 0) {
+//        if (rec->key->len == strlen(hdkey_key) + sizeof(btc_uint160) && memcmp(rec->key->str, hdkey_key, strlen(hdkey_key)) == 0) {
 //            btc_hdnode* hdnode = btc_hdnode_new();
 //            btc_hdnode_deserialize(rec->value->str, wallet->chain, hdnode);
 
 //            /* rip out the hash from the record key (avoid re-SHA256) */
-//            cstring* keyhash160 = cstr_new_buf(rec->key->str + strlen(hdkey_key), sizeof(uint160));
+//            cstring* keyhash160 = cstr_new_buf(rec->key->str + strlen(hdkey_key), sizeof(btc_uint160));
 
 //            /* add hdnode to the rbtree */
 //            RBTreeInsert(wallet->hdkeys_rbtree, keyhash160, hdnode);
@@ -310,13 +310,13 @@ btc_bool btc_wallet_load(btc_wallet* wallet, const char* file_path, int *error, 
         if (fwrite(&v, sizeof(v), 1, wallet->dbfile ) != 1) return false;
 
         // write genesis
-        if (fwrite(wallet->chain->genesisblockhash, sizeof(uint256), 1, wallet->dbfile ) != 1) return false;
+        if (fwrite(wallet->chain->genesisblockhash, sizeof(btc_uint256), 1, wallet->dbfile ) != 1) return false;
 
         btc_file_commit(wallet->dbfile);
     }
     else {
         // check file-header-magic, version and genesis
-        uint8_t buf[sizeof(file_hdr_magic)+sizeof(current_version)+sizeof(uint256)];
+        uint8_t buf[sizeof(file_hdr_magic)+sizeof(current_version)+sizeof(btc_uint256)];
         if ( (uint32_t)buffer.st_size < (uint32_t)(sizeof(buf)) ||
              fread(buf, sizeof(buf), 1, wallet->dbfile ) != 1 ||
              memcmp(buf, file_hdr_magic, sizeof(file_hdr_magic))
@@ -329,7 +329,7 @@ btc_bool btc_wallet_load(btc_wallet* wallet, const char* file_path, int *error, 
             fprintf(stderr, "Wallet file: unsupported file version\n");
             return false;
         }
-        if (memcmp(buf+sizeof(file_hdr_magic)+sizeof(current_version), wallet->chain->genesisblockhash, sizeof(uint256)) != 0) {
+        if (memcmp(buf+sizeof(file_hdr_magic)+sizeof(current_version), wallet->chain->genesisblockhash, sizeof(btc_uint256)) != 0) {
             fprintf(stderr, "Wallet file: different network\n");
             return false;
         }
@@ -360,7 +360,7 @@ btc_bool btc_wallet_load(btc_wallet* wallet, const char* file_path, int *error, 
                 uint32_t len;
 
                 btc_wallet_hdnode *whdnode = btc_wallet_hdnode_new();
-                if (fread(whdnode->pubkeyhash, sizeof(uint160), 1, wallet->dbfile ) != 1) {
+                if (fread(whdnode->pubkeyhash, sizeof(btc_uint160), 1, wallet->dbfile ) != 1) {
                     btc_wallet_hdnode_free(whdnode);
                     return false;
                 }
@@ -472,13 +472,13 @@ void btc_wallet_get_addresses(btc_wallet* wallet, vector* addr_out)
 
 //    while ((hdkey_rbtree_node = rbtree_enumerate_next(wallet->hdkeys_rbtree))) {
 //        cstring* key = hdkey_rbtree_node->key;
-//        uint8_t hash160[sizeof(uint160)+1];
+//        uint8_t hash160[sizeof(btc_uint160)+1];
 //        hash160[0] = wallet->chain->b58prefix_pubkey_address;
-//        memcpy(hash160 + 1, key->str, sizeof(uint160));
+//        memcpy(hash160 + 1, key->str, sizeof(btc_uint160));
 
 //        size_t addrsize = 98;
 //        char* addr = btc_calloc(1, addrsize);
-//        btc_base58_encode_check(hash160, sizeof(uint160)+1, addr, addrsize);
+//        btc_base58_encode_check(hash160, sizeof(btc_uint160)+1, addr, addrsize);
 //        vector_add(addr_out, addr);
 //    }
 }
@@ -489,7 +489,7 @@ btc_wallet_hdnode* btc_wallet_find_hdnode_byaddr(btc_wallet* wallet, const char*
         return NULL;
 
     uint8_t hashdata[strlen(search_addr)];
-    memset(hashdata, 0, sizeof(uint160));
+    memset(hashdata, 0, sizeof(btc_uint160));
     int outlen = btc_base58_decode_check(search_addr, hashdata, strlen(search_addr));
     if (outlen == 0) {
         return NULL;
@@ -497,7 +497,7 @@ btc_wallet_hdnode* btc_wallet_find_hdnode_byaddr(btc_wallet* wallet, const char*
 
     btc_wallet_hdnode* whdnode_search;
     whdnode_search = btc_calloc(1, sizeof(*whdnode_search));
-    memcpy(whdnode_search->pubkeyhash, hashdata+1, sizeof(uint160));
+    memcpy(whdnode_search->pubkeyhash, hashdata+1, sizeof(btc_uint160));
 
     btc_wallet_hdnode *needle = tfind(whdnode_search, &wallet->hdkeys_rbtree, btc_wallet_hdnode_compare); /* read */
     if (needle) {
@@ -541,14 +541,14 @@ btc_bool btc_wallet_add_wtx_move(btc_wallet* wallet, btc_wtx* wtx)
     return true;
 }
 
-btc_bool btc_wallet_have_key(btc_wallet* wallet, uint160 hash160)
+btc_bool btc_wallet_have_key(btc_wallet* wallet, btc_uint160 hash160)
 {
     if (!wallet)
         return false;
 
     btc_wallet_hdnode* whdnode_search;
     whdnode_search = btc_calloc(1, sizeof(*whdnode_search));
-    memcpy(whdnode_search->pubkeyhash, hash160, sizeof(uint160));
+    memcpy(whdnode_search->pubkeyhash, hash160, sizeof(btc_uint160));
 
     btc_wallet_hdnode *needle = tfind(whdnode_search, &wallet->hdkeys_rbtree, btc_wallet_hdnode_compare); /* read */
     if (needle) {
@@ -583,7 +583,7 @@ int64_t btc_wallet_wtx_get_credit(btc_wallet* wallet, btc_wtx* wtx)
         (wallet->bestblockheight < COINBASE_MATURITY || wtx->height > wallet->bestblockheight - COINBASE_MATURITY))
         return credit;
 
-    uint256 hash;
+    btc_uint256 hash;
     btc_tx_hash(wtx->tx, hash);
     unsigned int i = 0;
     if (wtx->tx->vout) {
@@ -690,7 +690,7 @@ void btc_wallet_add_to_spent(btc_wallet* wallet, btc_wtx* wtx) {
     }
 }
 
-btc_bool btc_wallet_is_spent(btc_wallet* wallet, uint256 hash, uint32_t n)
+btc_bool btc_wallet_is_spent(btc_wallet* wallet, btc_uint256 hash, uint32_t n)
 {
     if (!wallet)
         return false;
