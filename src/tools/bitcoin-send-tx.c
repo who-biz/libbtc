@@ -203,7 +203,7 @@ void broadcast_handshake_done(struct btc_node_* node)
     btc_p2p_inv_msg inv_msg;
     memset(&inv_msg, 0, sizeof(inv_msg));
 
-    uint256 hash;
+    btc_uint256 hash;
     btc_tx_hash(ctx->tx, hash);
     btc_p2p_msg_inv_init(&inv_msg, BTC_INV_TYPE_TX, hash);
 
@@ -237,7 +237,7 @@ void broadcast_post_cmd(struct btc_node_* node, btc_p2p_msg_hdr* hdr, struct con
     if (strcmp(hdr->command, BTC_MSG_INV) == 0) {
         /* hash the tx */
         /* TODO: cache the hash */
-        uint256 hash;
+        btc_uint256 hash;
         btc_tx_hash(ctx->tx, hash);
 
         //  decompose
@@ -322,7 +322,7 @@ btc_bool broadcast_tx(const btc_chainparams* chain, const btc_tx* tx, const char
 
     btc_node_group_add_peers_by_ip_or_seed(group, ips);
 
-    uint256 txhash;
+    btc_uint256 txhash;
     btc_tx_hash(tx, txhash);
     char hexout[sizeof(txhash)*2+1];
     utils_bin_to_hex(txhash, sizeof(txhash), hexout);

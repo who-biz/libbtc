@@ -2,7 +2,7 @@
 
  The MIT License (MIT)
 
- Copyright (c) 2015 Jonas Schnelli
+ Copyright (c) 2016 Jonas Schnelli
 
  Permission is hereby granted, free of charge, to any person obtaining
  a copy of this software and associated documentation files (the "Software"),
@@ -24,45 +24,27 @@
 
 */
 
-#ifndef __LIBBTC_CHAINPARAMS_H__
-#define __LIBBTC_CHAINPARAMS_H__
+#ifndef __LIBBTC_TOOL_H__
+#define __LIBBTC_TOOL_H__
 
 #include "btc.h"
+#include "tx.h"
 
 LIBBTC_BEGIN_DECL
 
-typedef struct btc_dns_seed_ {
-    char domain[256];
-} btc_dns_seed;
+/* generate the p2pkh address from a given hex pubkey */
+LIBBTC_API btc_bool addresses_from_pubkey(const btc_chainparams* chain, const char* pubkey_hex, char* p2pkh_address, char* p2sh_p2wpkh_address, char *p2wpkh_address);
 
-typedef struct btc_chainparams_ {
-    char chainname[32];
-    uint8_t b58prefix_pubkey_address;
-    uint8_t b58prefix_script_address;
-    const char bech32_hrp[5];
-    uint8_t b58prefix_secret_address; //!private key
-    uint32_t b58prefix_bip32_privkey;
-    uint32_t b58prefix_bip32_pubkey;
-    const unsigned char netmagic[4];
-    btc_uint256 genesisblockhash;
-    int default_port;
-    btc_dns_seed dnsseeds[8];
-} btc_chainparams;
+/* generate the hex publickey from a given hex private key */
+LIBBTC_API btc_bool pubkey_from_privatekey(const btc_chainparams* chain, const char* privkey_hex, char* pubkey_hex, size_t* sizeout);
 
-typedef struct btc_checkpoint_ {
-    uint32_t height;
-    const char* hash;
-    uint32_t timestamp;
-    uint32_t target;
-} btc_checkpoint;
+/* generate a new private key (hex) */
+LIBBTC_API btc_bool gen_privatekey(const btc_chainparams* chain, char* privkey_wif, size_t strsize_wif, char* privkey_hex);
 
-extern const btc_chainparams btc_chainparams_main;
-extern const btc_chainparams btc_chainparams_test;
-extern const btc_chainparams btc_chainparams_regtest;
-
-// the mainnet checkpoins, needs a fix size
-extern const btc_checkpoint btc_mainnet_checkpoint_array[21];
+LIBBTC_API btc_bool hd_gen_master(const btc_chainparams* chain, char* masterkeyhex, size_t strsize);
+LIBBTC_API btc_bool hd_print_node(const btc_chainparams* chain, const char* nodeser);
+LIBBTC_API btc_bool hd_derive(const btc_chainparams* chain, const char* masterkey, const char* keypath, char* extkeyout, size_t extkeyout_size);
 
 LIBBTC_END_DECL
 
-#endif // __LIBBTC_CHAINPARAMS_H__
+#endif // __LIBBTC_TOOL_H__

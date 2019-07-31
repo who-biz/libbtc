@@ -24,45 +24,61 @@
 
 */
 
-#ifndef __LIBBTC_CHAINPARAMS_H__
-#define __LIBBTC_CHAINPARAMS_H__
+#ifndef __LIBBTC_BTC_H__
+#define __LIBBTC_BTC_H__
 
-#include "btc.h"
+#include <limits.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef uint8_t btc_bool; //!serialize, c/c++ save bool
+
+#ifndef true
+#define true 1
+#endif
+
+#ifndef false
+#define false 0
+#endif
+
+#ifdef __cplusplus
+# define LIBBTC_BEGIN_DECL extern "C" {
+# define LIBBTC_END_DECL	}
+#else
+# define LIBBTC_BEGIN_DECL /* empty */
+# define LIBBTC_END_DECL	/* empty */
+#endif
+
+#ifndef LIBBTC_API
+#if defined(_WIN32)
+#ifdef LIBBTC_BUILD
+#define LIBBTC_API __declspec(dllexport)
+#else
+#define LIBBTC_API
+#endif
+#elif defined(__GNUC__) && defined(LIBBTC_BUILD)
+#define LIBBTC_API __attribute__((visibility("default")))
+#else
+#define LIBBTC_API
+#endif
+#endif
+
+#define BTC_ECKEY_UNCOMPRESSED_LENGTH 65
+#define BTC_ECKEY_COMPRESSED_LENGTH 33
+#define BTC_ECKEY_PKEY_LENGTH 32
+#define BTC_ECKEY_PKEY_LENGTH 32
+#define BTC_HASH_LENGTH 32
+
+#define BTC_MIN(a,b) (((a)<(b))?(a):(b))
+#define BTC_MAX(a,b) (((a)>(b))?(a):(b))
 
 LIBBTC_BEGIN_DECL
 
-typedef struct btc_dns_seed_ {
-    char domain[256];
-} btc_dns_seed;
-
-typedef struct btc_chainparams_ {
-    char chainname[32];
-    uint8_t b58prefix_pubkey_address;
-    uint8_t b58prefix_script_address;
-    const char bech32_hrp[5];
-    uint8_t b58prefix_secret_address; //!private key
-    uint32_t b58prefix_bip32_privkey;
-    uint32_t b58prefix_bip32_pubkey;
-    const unsigned char netmagic[4];
-    btc_uint256 genesisblockhash;
-    int default_port;
-    btc_dns_seed dnsseeds[8];
-} btc_chainparams;
-
-typedef struct btc_checkpoint_ {
-    uint32_t height;
-    const char* hash;
-    uint32_t timestamp;
-    uint32_t target;
-} btc_checkpoint;
-
-extern const btc_chainparams btc_chainparams_main;
-extern const btc_chainparams btc_chainparams_test;
-extern const btc_chainparams btc_chainparams_regtest;
-
-// the mainnet checkpoins, needs a fix size
-extern const btc_checkpoint btc_mainnet_checkpoint_array[21];
+typedef uint8_t uint256[32];
+typedef uint8_t uint160[20];
 
 LIBBTC_END_DECL
 
-#endif // __LIBBTC_CHAINPARAMS_H__
+#endif // __LIBBTC_BTC_H__

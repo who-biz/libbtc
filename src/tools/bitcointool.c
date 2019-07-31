@@ -339,7 +339,7 @@ int main(int argc, char* argv[])
         utils_hex_to_bin(scripthex, script_data, strlen(scripthex), &outlen);
         cstring* script = cstr_new_buf(script_data, outlen);
 
-        uint256 sighash;
+        btc_uint256 sighash;
         memset(sighash, 0, sizeof(sighash));
         btc_tx_sighash(tx, script, inputindex, sighashtype, 0, SIGVERSION_BASE, sighash);
 

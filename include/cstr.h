@@ -2,6 +2,7 @@
 
  The MIT License (MIT)
 
+ Copyright (c) 2015 BitPay, Inc.
  Copyright (c) 2015 Jonas Schnelli
 
  Permission is hereby granted, free of charge, to any person obtaining
@@ -24,45 +25,37 @@
 
 */
 
-#ifndef __LIBBTC_CHAINPARAMS_H__
-#define __LIBBTC_CHAINPARAMS_H__
+#ifndef __LIBBTC_CSTR_H__
+#define __LIBBTC_CSTR_H__
 
 #include "btc.h"
 
 LIBBTC_BEGIN_DECL
 
-typedef struct btc_dns_seed_ {
-    char domain[256];
-} btc_dns_seed;
+typedef struct cstring {
+    char* str;    /* string data, incl. NUL */
+    size_t len;   /* length of string, not including NUL */
+    size_t alloc; /* total allocated buffer length */
+} cstring;
 
-typedef struct btc_chainparams_ {
-    char chainname[32];
-    uint8_t b58prefix_pubkey_address;
-    uint8_t b58prefix_script_address;
-    const char bech32_hrp[5];
-    uint8_t b58prefix_secret_address; //!private key
-    uint32_t b58prefix_bip32_privkey;
-    uint32_t b58prefix_bip32_pubkey;
-    const unsigned char netmagic[4];
-    btc_uint256 genesisblockhash;
-    int default_port;
-    btc_dns_seed dnsseeds[8];
-} btc_chainparams;
+LIBBTC_API cstring* cstr_new(const char* init_str);
+LIBBTC_API cstring* cstr_new_sz(size_t sz);
+LIBBTC_API cstring* cstr_new_buf(const void* buf, size_t sz);
+LIBBTC_API cstring* cstr_new_cstr(const cstring* copy_str);
+LIBBTC_API void cstr_free(cstring* s, int free_buf);
 
-typedef struct btc_checkpoint_ {
-    uint32_t height;
-    const char* hash;
-    uint32_t timestamp;
-    uint32_t target;
-} btc_checkpoint;
+LIBBTC_API int cstr_equal(const cstring* a, const cstring* b);
+LIBBTC_API int cstr_compare(const cstring* a, const cstring* b);
+LIBBTC_API int cstr_resize(cstring* s, size_t sz);
+LIBBTC_API int cstr_erase(cstring* s, size_t pos, ssize_t len);
 
-extern const btc_chainparams btc_chainparams_main;
-extern const btc_chainparams btc_chainparams_test;
-extern const btc_chainparams btc_chainparams_regtest;
+LIBBTC_API int cstr_append_buf(cstring* s, const void* buf, size_t sz);
+LIBBTC_API int cstr_append_cstr(cstring* s, cstring* append);
 
-// the mainnet checkpoins, needs a fix size
-extern const btc_checkpoint btc_mainnet_checkpoint_array[21];
+LIBBTC_API int cstr_append_c(cstring* s, char ch);
+
+LIBBTC_API int cstr_alloc_minsize(cstring* s, size_t sz);
 
 LIBBTC_END_DECL
 
-#endif // __LIBBTC_CHAINPARAMS_H__
+#endif // __LIBBTC_CSTR_H__

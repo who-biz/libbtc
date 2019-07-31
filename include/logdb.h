@@ -2,8 +2,7 @@
 
  The MIT License (MIT)
 
- Copyright (c) 2016 Thomas Kerin
- Copyright (c) 2016 libbtc developers
+ Copyright (c) 2016 Jonas Schnelli
 
  Permission is hereby granted, free of charge, to any person obtaining
  a copy of this software and associated documentation files (the "Software"),
@@ -25,32 +24,44 @@
 
 */
 
-#ifndef __LIBBTC_BLOCK_H__
-#define __LIBBTC_BLOCK_H__
 
-#include "btc.h"
-#include "buffer.h"
-#include "cstr.h"
-#include "hash.h"
+/*
+ File Format
 
-LIBBTC_BEGIN_DECL
+ [8 bytes]          per file magic 0xF9, 0xAA, 0x03, 0xBA
+ [int32_t/4 bytes]  version number
+ [int32_t/4 bytes]  version flags
+ ---- records
+   [8 bytes]          static per record magic 0x88, 0x61, 0xAD, 0xFC, 0x5A, 0x11, 0x22, 0xF8
+   [16 bytes]         partial sha256 hash (first 16 bytes) of the record body
+   ---- record-body start ----
+   [1 byte]           record type (0 = write | 1 = erase)
+   [varint]           length of the key
+   [variable]         key data
+   [varint]           length of the value
+   [variable]         value data
+   ---- record-body end ----
+   [16 bytes]         partial sha256 of *all data* up to this point in logdb
+   ---- record end ---
+ ---- more records
+*/
 
-typedef struct btc_block_header_ {
-    int32_t version;
-    btc_uint256 prev_block;
-    btc_uint256 merkle_root;
-    uint32_t timestamp;
-    uint32_t bits;
-    uint32_t nonce;
-} btc_block_header;
+#ifndef __LIBLOGDB_H__
+#define __LIBLOGDB_H__
 
-LIBBTC_API btc_block_header* btc_block_header_new();
-LIBBTC_API void btc_block_header_free(btc_block_header* header);
-LIBBTC_API int btc_block_header_deserialize(btc_block_header* header, struct const_buffer* buf);
-LIBBTC_API void btc_block_header_serialize(cstring* s, const btc_block_header* header);
-LIBBTC_API void btc_block_header_copy(btc_block_header* dest, const btc_block_header* src);
-LIBBTC_API btc_bool btc_block_header_hash(btc_block_header* header, btc_uint256 hash);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-LIBBTC_END_DECL
+#include <stdlib.h>
 
-#endif // __LIBBTC_BLOCK_H__
+#include <logdb/logdb_core.h>
+#include <logdb/logdb_rec.h>
+#include <logdb/logdb_memdb_llist.h>
+#include <logdb/logdb_memdb_rbtree.h>
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __LIBLOGDB_H__ */

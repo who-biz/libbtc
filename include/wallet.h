@@ -33,7 +33,7 @@
 #include "buffer.h"
 #include "tx.h"
 
-LIBBTC_BEGIN_DECL
+LIBBTC_END_DECL
 
 /** single key/value record */
 typedef struct btc_wallet {
@@ -50,13 +50,13 @@ typedef struct btc_wallet {
 } btc_wallet;
 
 typedef struct btc_wtx_ {
-    btc_uint256 tx_hash_cache;
+    uint256 tx_hash_cache;
     uint32_t height;
     btc_tx* tx;
 } btc_wtx;
 
 typedef struct btc_wallet_hdnode_ {
-    btc_uint160 pubkeyhash;
+    uint160 pubkeyhash;
     btc_hdnode *hdnode;
 } btc_wallet_hdnode;
 
@@ -110,7 +110,7 @@ LIBBTC_API btc_wallet_hdnode* btc_wallet_find_hdnode_byaddr(btc_wallet* wallet, 
 LIBBTC_API btc_bool btc_wallet_add_wtx_move(btc_wallet* wallet, btc_wtx* wtx);
 
 /** looks if a key with the hash160 (SHA256/RIPEMD) exists */
-LIBBTC_API btc_bool btc_wallet_have_key(btc_wallet* wallet, btc_uint160 hash160);
+LIBBTC_API btc_bool btc_wallet_have_key(btc_wallet* wallet, uint160 hash160);
 
 /** gets credit from given transaction */
 LIBBTC_API int64_t btc_wallet_get_balance(btc_wallet* wallet);
@@ -123,7 +123,7 @@ LIBBTC_API btc_bool btc_wallet_txout_is_mine(btc_wallet* wallet, btc_tx_out* tx_
 
 /** checks if a transaction outpoint is owned by the wallet */
 LIBBTC_API void btc_wallet_add_to_spent(btc_wallet* wallet, btc_wtx* wtx);
-LIBBTC_API btc_bool btc_wallet_is_spent(btc_wallet* wallet, btc_uint256 hash, uint32_t n);
+LIBBTC_API btc_bool btc_wallet_is_spent(btc_wallet* wallet, uint256 hash, uint32_t n);
 LIBBTC_API btc_bool btc_wallet_get_unspent(btc_wallet* wallet, vector* unspents);
 
 /** checks a transaction or relevance to the wallet */

@@ -67,7 +67,7 @@ typedef struct btc_headers_db_interface_
     btc_bool (*has_checkpoint_start)(void *db);
 
     /* set that we are using a checkpoint as basepoint at given height with given hash */
-    void (*set_checkpoint_start)(void *db, btc_uint256 hash, uint32_t height);
+    void (*set_checkpoint_start)(void *db, uint256 hash, uint32_t height);
 } btc_headers_db_interface;
 
 LIBBTC_END_DECL

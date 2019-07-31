@@ -24,45 +24,34 @@
 
 */
 
-#ifndef __LIBBTC_CHAINPARAMS_H__
-#define __LIBBTC_CHAINPARAMS_H__
+#ifndef __LIBBTC_VECTOR_H__
+#define __LIBBTC_VECTOR_H__
 
 #include "btc.h"
 
 LIBBTC_BEGIN_DECL
 
-typedef struct btc_dns_seed_ {
-    char domain[256];
-} btc_dns_seed;
+typedef struct vector {
+    void** data;  /* array of pointers */
+    size_t len;   /* array element count */
+    size_t alloc; /* allocated array elements */
 
-typedef struct btc_chainparams_ {
-    char chainname[32];
-    uint8_t b58prefix_pubkey_address;
-    uint8_t b58prefix_script_address;
-    const char bech32_hrp[5];
-    uint8_t b58prefix_secret_address; //!private key
-    uint32_t b58prefix_bip32_privkey;
-    uint32_t b58prefix_bip32_pubkey;
-    const unsigned char netmagic[4];
-    btc_uint256 genesisblockhash;
-    int default_port;
-    btc_dns_seed dnsseeds[8];
-} btc_chainparams;
+    void (*elem_free_f)(void*);
+} vector;
 
-typedef struct btc_checkpoint_ {
-    uint32_t height;
-    const char* hash;
-    uint32_t timestamp;
-    uint32_t target;
-} btc_checkpoint;
+LIBBTC_API vector* vector_new(size_t res, void (*free_f)(void*));
+LIBBTC_API void vector_free(vector* vec, btc_bool free_array);
 
-extern const btc_chainparams btc_chainparams_main;
-extern const btc_chainparams btc_chainparams_test;
-extern const btc_chainparams btc_chainparams_regtest;
+LIBBTC_API btc_bool vector_add(vector* vec, void* data);
+LIBBTC_API btc_bool vector_remove(vector* vec, void* data);
+LIBBTC_API void vector_remove_idx(vector* vec, size_t idx);
+LIBBTC_API void vector_remove_range(vector* vec, size_t idx, size_t len);
+LIBBTC_API btc_bool vector_resize(vector* vec, size_t newsz);
 
-// the mainnet checkpoins, needs a fix size
-extern const btc_checkpoint btc_mainnet_checkpoint_array[21];
+LIBBTC_API ssize_t vector_find(vector* vec, void* data);
+
+#define vector_idx(vec, idx) ((vec)->data[(idx)])
 
 LIBBTC_END_DECL
 
-#endif // __LIBBTC_CHAINPARAMS_H__
+#endif // __LIBBTC_VECTOR_H__

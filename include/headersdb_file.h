@@ -59,12 +59,12 @@ btc_blockindex * btc_headers_db_connect_hdr(btc_headers_db* db, struct const_buf
 
 void btc_headers_db_fill_block_locator(btc_headers_db* db, vector *blocklocators);
 
-btc_blockindex * btc_headersdb_find(btc_headers_db* db, btc_uint256 hash);
+btc_blockindex * btc_headersdb_find(btc_headers_db* db, uint256 hash);
 btc_blockindex * btc_headersdb_getchaintip(btc_headers_db* db);
 btc_bool btc_headersdb_disconnect_tip(btc_headers_db* db);
 
 btc_bool btc_headersdb_has_checkpoint_start(btc_headers_db* db);
-void btc_headersdb_set_checkpoint_start(btc_headers_db* db, btc_uint256 hash, uint32_t height);
+void btc_headersdb_set_checkpoint_start(btc_headers_db* db, uint256 hash, uint32_t height);
 
 
 // interface function pointer bindings
@@ -79,7 +79,7 @@ static const btc_headers_db_interface btc_headers_db_interface_file = {
     (btc_bool (*)(void *))btc_headersdb_disconnect_tip,
 
     (btc_bool (*)(void *))btc_headersdb_has_checkpoint_start,
-    (void (*)(void *, btc_uint256, uint32_t))btc_headersdb_set_checkpoint_start
+    (void (*)(void *, uint256, uint32_t))btc_headersdb_set_checkpoint_start
 };
 
 #ifdef __cplusplus

@@ -2,8 +2,7 @@
 
  The MIT License (MIT)
 
- Copyright (c) 2016 Thomas Kerin
- Copyright (c) 2016 libbtc developers
+ Copyright (c) 2016 Jonas Schnelli
 
  Permission is hereby granted, free of charge, to any person obtaining
  a copy of this software and associated documentation files (the "Software"),
@@ -25,32 +24,48 @@
 
 */
 
-#ifndef __LIBBTC_BLOCK_H__
-#define __LIBBTC_BLOCK_H__
+#include <stdint.h>
+#include <stddef.h>
 
-#include "btc.h"
-#include "buffer.h"
-#include "cstr.h"
-#include "hash.h"
+#ifndef __LIBLOGDB_BASE_H__
+#define __LIBLOGDB_BASE_H__
 
-LIBBTC_BEGIN_DECL
+#define UNUSED(x) (void)(x)
 
-typedef struct btc_block_header_ {
-    int32_t version;
-    btc_uint256 prev_block;
-    btc_uint256 merkle_root;
-    uint32_t timestamp;
-    uint32_t bits;
-    uint32_t nonce;
-} btc_block_header;
+typedef uint8_t logdb_bool; /*!serialize, c/c++ save bool*/
 
-LIBBTC_API btc_block_header* btc_block_header_new();
-LIBBTC_API void btc_block_header_free(btc_block_header* header);
-LIBBTC_API int btc_block_header_deserialize(btc_block_header* header, struct const_buffer* buf);
-LIBBTC_API void btc_block_header_serialize(cstring* s, const btc_block_header* header);
-LIBBTC_API void btc_block_header_copy(btc_block_header* dest, const btc_block_header* src);
-LIBBTC_API btc_bool btc_block_header_hash(btc_block_header* header, btc_uint256 hash);
+#ifndef true
+#define true 1
+#endif
 
-LIBBTC_END_DECL
+#ifndef false
+#define false 0
+#endif
 
-#endif // __LIBBTC_BLOCK_H__
+#ifndef NULL
+#define NULL 0
+#endif 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef LIBLOGDB_API
+#if defined(_WIN32)
+#ifdef LIBBTC_BUILD
+#define LIBLOGDB_API __declspec(dllexport)
+#else
+#define LIBLOGDB_API
+#endif
+#elif defined(__GNUC__) && defined(LIBBTC_BUILD)
+#define LIBLOGDB_API __attribute__((visibility("default")))
+#else
+#define LIBLOGDB_API
+#endif
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __LIBLOGDB_BASE_H__ */
