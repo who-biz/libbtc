@@ -45,7 +45,7 @@ LIBBTC_API void utils_bin_to_hex(unsigned char* bin_in, size_t inlen, char* hex_
 LIBBTC_API uint8_t* utils_hex_to_uint8(const char* str);
 LIBBTC_API char* utils_uint8_to_hex(const uint8_t* bin, size_t l);
 LIBBTC_API void utils_reverse_hex(char* h, int len);
-LIBBTC_API void utils_btc_uint256_sethex(char* psz, uint8_t* out);
+LIBBTC_API void utils_uint256_sethex(char* psz, uint8_t* out);
 LIBBTC_API void* safe_malloc(size_t size);
 LIBBTC_API void btc_cheap_random_bytes(uint8_t* buf, uint32_t len);
 LIBBTC_API void btc_get_default_datadir(cstring *path_out);
