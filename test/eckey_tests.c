@@ -69,8 +69,10 @@ void test_eckey()
     int recid;
     btc_pubkey pubkey_rec;
     btc_pubkey_init(&pubkey_rec);
+#if ENABLE_OPENSSL_TESTS
     btc_key_sign_hash_compact_recoverable(&key, hash, sigcmp_rec, &outlencmp_rec, &recid);
     btc_key_sign_recover_pubkey(sigcmp_rec, hash, recid, &pubkey_rec);
+#endif
     u_assert_int_eq(btc_pubkey_verify_sig(&pubkey, hash, sig, outlen), true);
     u_assert_int_eq(btc_pubkey_verify_sig(&pubkey, hash, sig, outlen), true);
     int test = sizeof(pubkey.pubkey);

@@ -197,6 +197,7 @@ btc_bool btc_key_sign_hash_compact(const btc_key* privkey, const btc_uint256 has
     return btc_ecc_sign_compact(privkey->privkey, hash, sigout, outlen);
 }
 
+#if ENABLE_OPENSSL_TESTS
 btc_bool btc_key_sign_hash_compact_recoverable(const btc_key* privkey, const btc_uint256 hash, unsigned char* sigout, size_t* outlen, int* recid)
 {
     return btc_ecc_sign_compact_recoverable(privkey->privkey, hash, sigout, outlen, recid);
@@ -216,6 +217,7 @@ btc_bool btc_key_sign_recover_pubkey(const unsigned char* sig, const btc_uint256
     }
     return 1;
 }
+#endif
 
 btc_bool btc_pubkey_verify_sig(const btc_pubkey* pubkey, const btc_uint256 hash, unsigned char* sigder, int len)
 {
