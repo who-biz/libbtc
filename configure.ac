@@ -1,11 +1,11 @@
 dnl require autoconf 2.68 (AS_ECHO/AS_ECHO_N)
 AC_PREREQ([2.68])
-AC_INIT([libbtc],[0.1],[https://github.com/jonasschnelli/libbtc/issues],[libbtc])
+AC_INIT([libbtc],[0.1],[],[libbtc])
 AC_CONFIG_HEADERS([src/libbtc-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 AC_CANONICAL_HOST
-m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([no])])
 AH_TOP([#ifndef LIBBTC_CONFIG_H])
 AH_TOP([#define LIBBTC_CONFIG_H])
 AH_BOTTOM([#endif /*LIBBTC_CONFIG_H*/])
@@ -133,7 +133,7 @@ AM_CONDITIONAL([WITH_TOOLS], [test "x$with_tools" = "xyes"])
 AM_CONDITIONAL([WITH_WALLET], [test "x$with_wallet" = "xyes"])
 AM_CONDITIONAL([WITH_NET], [test "x$with_net" = "xyes"])
 
-ac_configure_args="${ac_configure_args} --enable-module-recovery"
+ac_configure_args="${ac_configure_args}"
 AC_CONFIG_SUBDIRS([src/secp256k1])
 
 dnl make sure nothing new is exported so that we don't break the cache

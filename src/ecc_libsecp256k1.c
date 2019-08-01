@@ -127,6 +127,7 @@ btc_bool btc_ecc_sign_compact(const uint8_t* private_key, const btc_uint256 hash
     return 1;
 }
 
+#ifdef ENABLE_OPENSSL_TESTS
 btc_bool btc_ecc_sign_compact_recoverable(const uint8_t* private_key, const btc_uint256 hash, unsigned char* sigrec, size_t* outlen, int *recid)
 {
     assert(secp256k1_ctx);
@@ -160,6 +161,7 @@ btc_bool btc_ecc_recover_pubkey(const unsigned char* sigrec, const btc_uint256 h
 
     return 1;
 }
+#endif
 
 btc_bool btc_ecc_verify_sig(const uint8_t* public_key, btc_bool compressed, const btc_uint256 hash, unsigned char* sigder, size_t siglen)
 {
