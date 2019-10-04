@@ -43,7 +43,8 @@ set(header_files
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
-target_link_libraries(bitcoin)
+target_link_libraries(bitcoin
+                      secp256k1)
 
 # GUI/libwallet install target
 if (BUILD_GUI_DEPS)
