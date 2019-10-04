@@ -132,6 +132,16 @@ set(source_files
     src/logdb/include/logdb/logdb_rec.h
     src/logdb/include/logdb/logdb.h
     src/logdb/include/logdb/red_black_tree.h
+    src/secp256k1/src/bench_ecdh.c
+    src/secp256k1/src/bench_internal.c
+    src/secp256k1/src/bench_recover.c
+    src/secp256k1/src/bench_schnorr_verify.c
+    src/secp256k1/src/bench_sign.c
+    src/secp256k1/src/bench_verify.c
+    src/secp256k1/src/gen_context.c
+    src/secp256k1/src/secp256k1.c
+    src/secp256k1/src/
+    src/secp256k1/src/
     include/btc/wallet.h
     src/wallet.c)
 
