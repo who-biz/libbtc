@@ -21,6 +21,7 @@
 #include "include/btc/tx.h"
 #include "include/btc/utils.h"
 #include "include/btc/vector.h"
+#include "src/secp256k1/include/secp256k1.h"
 #include "src/logdb/include/logdb/logdb_base.h"
 #include "src/logdb/include/logdb/logdb_core.h"
 #include "src/logdb/include/logdb/logdb_memdb_llist.h"
